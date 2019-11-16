@@ -26,21 +26,22 @@ class koaJsonRpc {
   app () {
     return async (ctx, next) => {
       let body, result;
-      if (this.token) {
-        const headerToken = ctx.get('authorization').split(' ').pop();
-        if (headerToken !== this.token) {
-          ctx.body = jsonResp(null, jsonError.Unauthorized());
-          return;
-        }
-      }
       try {
         body = await parse.json(ctx, { limit: this.limit });
       } catch (err) {
-        const errBody = jsonResp(null, jsonError.ParseError());
+        const errBody = jsonResp(body.id || null, jsonError.ParseError());
         ctx.body = errBody;
         return;
       }
 
+      if (this.token) {
+        const headerToken = ctx.get('authorization').split(' ').pop();
+        if (headerToken !== this.token) {
+          ctx.body = jsonResp(body.id || null, jsonError.Unauthorized());
+          return;
+        }
+      }
+      
       if (body.jsonrpc !== '2.0' || !hasOwnProperty(body, 'method') || !hasOwnProperty(body, 'id') || ctx.request.method !== 'POST') {
         ctx.body = jsonResp(body.id || null, jsonError.InvalidRequest());
         return;
