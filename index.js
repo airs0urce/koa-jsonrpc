@@ -42,7 +42,7 @@ class koaJsonRpc {
         }
       }
       
-      if (body.jsonrpc !== '2.0' || !hasOwnProperty(body, 'method') || !hasOwnProperty(body, 'id') || ctx.request.method !== 'POST') {
+      if (body.jsonrpc !== '2.0' || !hasOwnProperty(body, 'method') || ctx.request.method !== 'POST') {
         ctx.body = jsonResp(body.id || null, jsonError.InvalidRequest());
         return;
       }
@@ -60,7 +60,7 @@ class koaJsonRpc {
         ctx.body = jsonResp(body.id, jsonError.InternalError(e));
         return;
       }
-      ctx.body = jsonResp(body.id, null, result);
+      ctx.body = jsonResp(body.id || null, null, result);
     };
   }
 }
