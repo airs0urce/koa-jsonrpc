@@ -29,7 +29,7 @@ class koaJsonRpc {
       try {
         body = await parse.json(ctx, { limit: this.limit });
       } catch (err) {
-        const errBody = jsonResp(body.id || null, jsonError.ParseError());
+        const errBody = jsonResp(null, jsonError.ParseError());
         ctx.body = errBody;
         return;
       }
@@ -37,7 +37,7 @@ class koaJsonRpc {
       if (this.token) {
         const headerToken = ctx.get('authorization').split(' ').pop();
         if (headerToken !== this.token) {
-          ctx.body = jsonResp(body.id || null, jsonError.Unauthorized());
+          ctx.body = jsonResp(null, jsonError.Unauthorized());
           return;
         }
       }
