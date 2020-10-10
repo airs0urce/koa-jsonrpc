@@ -67,3 +67,4 @@ class koaJsonRpc {
 module.exports = (...args) => new koaJsonRpc(...args);
 
 module.exports.InvalidParamsError = InvalidParamsError;
+module.exports.ServerError = jsonError.ServerError;
